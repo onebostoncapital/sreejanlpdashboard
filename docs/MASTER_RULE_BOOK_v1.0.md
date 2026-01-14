@@ -236,27 +236,9 @@ Only the following indicators are permitted in version 1.0:
 - Volatility measure (ATR or Standard Deviation)
 - Range / Chop efficiency metric
 
-No additional indicators may be added without a new Rule Book version.
-
 ---
 
-### 5.3 Indicator Interpretation Rules
-
-Indicators must be used only to describe behavior:
-
-- MA-20 and MA-200 describe short-term and long-term price alignment
-- RSI describes momentum strength or weakness
-- Volatility measures describe speed and risk of price movement
-- Range efficiency describes directional progress versus oscillation
-
-Indicators must never be used to:
-- Generate buy or sell signals
-- Predict reversals
-- Justify assumptions
-
----
-
-### 5.4 TA Outputs
+### 5.3 TA Outputs
 
 The TA module may output:
 - Short-term bias (measured)
@@ -265,16 +247,62 @@ The TA module may output:
 - Trend strength
 - Indicator agreement or conflict score
 
-All outputs must be numerical or descriptive, not prescriptive.
+The TA module provides measurements only, never conclusions.
 
 ---
 
-### 5.5 Forbidden Actions
+## 6. FUNDAMENTAL ANALYSIS (FA) MODULE
 
-The TA module must never:
-- Call external APIs
-- Access news or fundamental data
-- Forecast future prices
-- Recommend strategies or liquidity ranges
+### 6.1 Purpose
 
-It provides measurements only, never conclusions.
+The Fundamental Analysis module provides contextual, non-price-based information that may influence market behavior.
+
+It captures macro, geopolitical, and ecosystem-specific pressures that are not visible in price alone.
+
+---
+
+### 6.2 FA Data Scope (v1.0 – Frozen)
+
+The FA module may consider only the following categories:
+
+- Geopolitical news and global macro events
+- Bitcoin-related news and systemic crypto market developments
+- General cryptocurrency market news
+- Solana ecosystem–specific news and announcements
+- Major protocol upgrades, outages, or regulatory actions
+
+No additional FA sources may be added without a new Rule Book version.
+
+---
+
+### 6.3 Evidence-Based News Handling Rules
+
+- All news items must be timestamped
+- News must be categorized by type and relevance
+- News impact must be assessed using historical precedents
+- News impact must decay over time
+
+FA conclusions must never be based on headline interpretation alone.
+
+---
+
+### 6.4 FA Outputs
+
+The FA module may output:
+- Fundamental bias score (contextual, not directional)
+- Event risk level
+- Macro or ecosystem pressure indicators
+
+FA outputs provide context only and must not override TA measurements.
+
+---
+
+### 6.5 Forbidden Actions
+
+The FA module must never:
+- Predict price direction
+- Generate trade or liquidity signals
+- Override TA or market state classification
+- Make absolute or time-specific claims
+
+It provides contextual evidence only, never forecasts.
