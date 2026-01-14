@@ -81,289 +81,120 @@ Violation of this order is a critical system error.
 
 Each module must have exactly one responsibility.
 
-#### Price Module
-- Fetches current and historical prices
-- Handles multiple data sources and fallback logic
-- Caches and stores price data
-- Is the only module allowed to interact with third-party price APIs
-
-Forbidden:
-- Indicators
-- Analysis
-- Interpretation
-- Strategy logic
-
----
-
-#### Technical Analysis (TA) Module
-- Computes technical indicators from price data
-- Measures trend, momentum, volatility, and structure
-- Produces numerical measurements and descriptive labels
-
-Forbidden:
-- Trade signals
-- Strategy recommendations
-- Forecasts
-- API calls
-
----
-
-#### Fundamental Analysis (FA) Module
-- Collects and categorizes news and macro information
-- Scores contextual market pressure based on historical impact
-- Accounts for news decay over time
-
-Forbidden:
-- Price prediction
-- Direction enforcement
-- Overriding TA results
-
----
-
-#### Market State Classification Module
-- Combines TA and FA outputs
-- Classifies the current market environment
-- Produces human-readable market state descriptions
-
-Forbidden:
-- Execution logic
-- Liquidity math
-- Capital allocation
-
----
-
-#### Forecast & Risk Interpretation Module
-- Uses current state and historical analogs
-- Estimates probabilistic future behavior
-- Assesses volatility expansion, range survival, and tail risk
-
-Forbidden:
-- Price targets
-- Guarantees
-- Absolute statements
-
----
-
-#### Advisory Guidance Module
-- Translates forecasts into behavioral guidance
-- Suggests conservative, neutral, or aggressive posture
-- Does not execute or automate actions
-
----
-
-#### Dashboard Module
-- Displays results only
-- Explains evidence, confidence, and reasoning
-- Contains no logic or calculations
-
----
-
-### 3.3 Stability Rule
-
-Before moving to the next layer:
-- The current layer must be complete
-- Fully testable in isolation
-- Committed and frozen in Git
-
-If a higher layer is deleted, all lower layers must still work perfectly.
-
-This rule is non-negotiable.
-
 ---
 
 ## 4. PRICE MODULE – FOUNDATION LAYER
 
-### 4.1 Purpose
+The Price Module provides accurate, reliable, and consistent price data and is the only layer allowed to interact with third-party price APIs.
 
-The Price Module is the foundation of the entire system.
-
-It exists to provide accurate, reliable, and consistent price data to all other modules.
-
----
-
-### 4.2 Responsibilities
-
-The Price Module is responsible for:
-- Fetching current market prices
-- Fetching historical price data
-- Supporting multiple price data sources
-- Automatically falling back if a data source fails
-- Caching price data to prevent API overuse
-- Providing a single, clean interface for price access
-
----
-
-### 4.3 Access Control (Critical Rule)
-
-The Price Module is the only module allowed to:
-- Make external API calls for price data
-- Communicate with third-party price providers
-
-All other modules must consume price data exclusively through the Price Module.
-
----
-
-### 4.4 Forbidden Actions
-
-The Price Module must never:
-- Compute indicators
-- Perform technical analysis
-- Interpret price movement
-- Make forecasts or recommendations
-- Contain strategy logic
+It provides **facts only**, never interpretation.
 
 ---
 
 ## 5. TECHNICAL ANALYSIS (TA) MODULE
 
-### 5.1 Purpose
+The TA module measures observable price behavior using a frozen indicator set (MA-20, MA-200, RSI, volatility, range efficiency).
 
-The Technical Analysis module exists to measure observable price behavior.
-
-It translates raw price data into objective, explainable measurements.
-
----
-
-### 5.2 Allowed Indicators (v1.0 – Frozen)
-
-Only the following indicators are permitted in version 1.0:
-
-- Moving Average (MA) 20
-- Moving Average (MA) 200
-- Relative Strength Index (RSI)
-- Volatility measure (ATR or Standard Deviation)
-- Range / Chop efficiency metric
-
----
-
-### 5.3 TA Outputs
-
-The TA module may output:
-- Short-term bias (measured)
-- Long-term bias (measured)
-- Volatility level
-- Trend strength
-- Indicator agreement or conflict score
+It produces **measurements only**, never signals or forecasts.
 
 ---
 
 ## 6. FUNDAMENTAL ANALYSIS (FA) MODULE
 
-### 6.1 Purpose
+The FA module provides contextual, non-price-based evidence derived from macro, crypto, Bitcoin, and Solana-specific news.
 
-The Fundamental Analysis module provides contextual, non-price-based information that may influence market behavior.
-
----
-
-### 6.2 FA Data Scope (v1.0 – Frozen)
-
-The FA module may consider only the following categories:
-
-- Geopolitical news and global macro events
-- Bitcoin-related news and systemic crypto market developments
-- General cryptocurrency market news
-- Solana ecosystem–specific news and announcements
-- Major protocol upgrades, outages, or regulatory actions
-
----
-
-### 6.3 Evidence-Based News Handling Rules
-
-- All news items must be timestamped
-- News must be categorized by type and relevance
-- News impact must be assessed using historical precedents
-- News impact must decay over time
-
----
-
-### 6.4 FA Outputs
-
-The FA module may output:
-- Fundamental bias score (contextual, not directional)
-- Event risk level
-- Macro or ecosystem pressure indicators
+It provides **context only**, never predictions.
 
 ---
 
 ## 7. MARKET STATE CLASSIFICATION MODULE
 
-### 7.1 Purpose
+The Market State module classifies the current environment using direction, volatility, structure, and contextual risk.
 
-The Market State Classification module exists to answer one question:
-
-**What type of market environment exists right now?**
-
----
-
-### 7.2 Core Market State Dimensions
-
-Each market state is defined using four dimensions:
-
-1. Direction (Bullish, Bearish, Neutral)
-2. Volatility Regime (Low, Normal, High, Expanding/Contracting)
-3. Structure (Trending, Range-bound, Choppy/Transitional)
-4. Contextual Risk (Low, Elevated, High)
-
----
-
-### 7.3 Market State Outputs
-
-The Market State module may output:
-- Primary market state label
-- Secondary risk modifier
-- Confidence score
+It describes **what is**, not what to do.
 
 ---
 
 ## 8. FORECAST & RISK INTERPRETATION MODULE
 
-### 8.1 Purpose
+The Forecast module estimates **probable future behavior** based on historical outcomes under similar market states.
 
-The Forecast & Risk Interpretation module exists to estimate **probable future market behavior**, not to predict prices.
-
-It connects the present market state with historical outcomes under similar conditions.
+It expresses uncertainty explicitly and never produces price targets.
 
 ---
 
-### 8.2 Forecasting Definition (Critical)
+## 9. ADVISORY GUIDANCE & LIQUIDITY FRAMING MODULE
 
-Forecasting in this system means:
-- Estimating probability distributions, not single outcomes
-- Estimating behavioral envelopes, not price targets
-- Expressing uncertainty explicitly
+### 9.1 Purpose
 
-The system never states what *will* happen, only what has *tended* to happen.
+The Advisory Guidance module translates forecasts and risk interpretations into **behavioral guidance** for liquidity providers.
 
----
-
-### 8.3 Evidence-Based Forecasting Rules
-
-All forecasts must:
-- Reference the current market state
-- Reference historical outcomes under comparable states
-- Include an explicit confidence level
-- Be downgraded when historical outcomes are widely dispersed
+It exists to help avoid applying the wrong liquidity posture to the wrong market environment.
 
 ---
 
-### 8.4 Risk Interpretation Responsibilities
+### 9.2 Guidance Scope
 
-The module must assess:
-- Volatility expansion or contraction likelihood
-- Range survival probability
-- Directional persistence risk
-- Tail-risk exposure
+The module may suggest:
+- Conservative posture
+- Neutral posture
+- Aggressive posture
 
-Risk interpretation must always prioritize **capital preservation awareness**.
+Guidance is **advisory only** and never mandatory.
 
 ---
 
-### 8.5 Forbidden Actions
+### 9.3 Liquidity Framing Rules
 
-The Forecast & Risk Interpretation module must never:
-- Produce price targets
-- Issue guarantees
-- Override market state classification
-- Recommend execution actions
+Liquidity framing may include:
+- Directional bias (Long / Short / Neutral)
+- Suggested range width (relative, not exact)
+- Liquidity floor awareness based on risk and leverage
+- Explicit liquidation-risk warnings
 
-It provides probabilistic insight only.
+All liquidity framing must be:
+- Derived from forecast and risk interpretation
+- Expressed probabilistically
+- Accompanied by confidence levels
+
+---
+
+### 9.4 Liquidity Floor Definition (Critical)
+
+A liquidity floor is a **risk boundary**, not a prediction.
+
+It is derived from:
+- Current volatility
+- Historical adverse move distributions
+- Leverage mechanics (e.g., DeFiTuna constraints)
+
+The system must never state that price *will not* cross a liquidity floor.
+
+---
+
+### 9.5 Forbidden Actions
+
+The Advisory Guidance module must never:
+- Execute trades
+- Place or manage liquidity
+- Optimize ranges for profit
+- Override lower-layer evidence
+
+It advises behavior only.
+
+---
+
+## 10. VERSION GOVERNANCE
+
+- This document is frozen as **MASTER RULE BOOK v1.0**
+- Any change requires a new version (v1.1, v2.0, etc.)
+- Code must always conform to the active Rule Book
+
+---
+
+## FINAL STATEMENT
+
+This system exists to replace assumption with evidence, reaction with understanding, and guesswork with structured thinking.
+
+If evidence is weak, the system must be humble.  
+If evidence is strong, the system must explain why.
