@@ -245,8 +245,6 @@ The TA module may output:
 - Trend strength
 - Indicator agreement or conflict score
 
-The TA module provides measurements only, never conclusions.
-
 ---
 
 ## 6. FUNDAMENTAL ANALYSIS (FA) MODULE
@@ -285,8 +283,6 @@ The FA module may output:
 - Event risk level
 - Macro or ecosystem pressure indicators
 
-FA outputs provide context only.
-
 ---
 
 ## 7. MARKET STATE CLASSIFICATION MODULE
@@ -297,64 +293,77 @@ The Market State Classification module exists to answer one question:
 
 **What type of market environment exists right now?**
 
-It converts TA and FA measurements into structured, human-readable market states.
-
 ---
 
-### 7.2 Market State Definition Rules
-
-Market states must be:
-- Mutually exclusive
-- Evidence-based
-- Explainable in plain language
-- Stable enough to be backtested historically
-
-Market states must never be vague or overlapping.
-
----
-
-### 7.3 Core Market State Dimensions
+### 7.2 Core Market State Dimensions
 
 Each market state is defined using four dimensions:
 
-1. **Direction**
-   - Bullish
-   - Bearish
-   - Neutral
-
-2. **Volatility Regime**
-   - Low
-   - Normal
-   - High
-   - Expanding / Contracting
-
-3. **Structure**
-   - Trending
-   - Range-bound
-   - Choppy / Transitional
-
-4. **Contextual Risk**
-   - Low
-   - Elevated
-   - High (event-driven)
+1. Direction (Bullish, Bearish, Neutral)
+2. Volatility Regime (Low, Normal, High, Expanding/Contracting)
+3. Structure (Trending, Range-bound, Choppy/Transitional)
+4. Contextual Risk (Low, Elevated, High)
 
 ---
 
-### 7.4 Market State Outputs
+### 7.3 Market State Outputs
 
 The Market State module may output:
-- A primary market state label
-- A secondary risk modifier
-- A confidence score based on indicator agreement
+- Primary market state label
+- Secondary risk modifier
+- Confidence score
 
 ---
 
-### 7.5 Forbidden Actions
+## 8. FORECAST & RISK INTERPRETATION MODULE
 
-The Market State Classification module must never:
-- Suggest strategies
-- Compute liquidity ranges
-- Allocate capital
-- Make forecasts or predictions
+### 8.1 Purpose
 
-It classifies the present environment only.
+The Forecast & Risk Interpretation module exists to estimate **probable future market behavior**, not to predict prices.
+
+It connects the present market state with historical outcomes under similar conditions.
+
+---
+
+### 8.2 Forecasting Definition (Critical)
+
+Forecasting in this system means:
+- Estimating probability distributions, not single outcomes
+- Estimating behavioral envelopes, not price targets
+- Expressing uncertainty explicitly
+
+The system never states what *will* happen, only what has *tended* to happen.
+
+---
+
+### 8.3 Evidence-Based Forecasting Rules
+
+All forecasts must:
+- Reference the current market state
+- Reference historical outcomes under comparable states
+- Include an explicit confidence level
+- Be downgraded when historical outcomes are widely dispersed
+
+---
+
+### 8.4 Risk Interpretation Responsibilities
+
+The module must assess:
+- Volatility expansion or contraction likelihood
+- Range survival probability
+- Directional persistence risk
+- Tail-risk exposure
+
+Risk interpretation must always prioritize **capital preservation awareness**.
+
+---
+
+### 8.5 Forbidden Actions
+
+The Forecast & Risk Interpretation module must never:
+- Produce price targets
+- Issue guarantees
+- Override market state classification
+- Recommend execution actions
+
+It provides probabilistic insight only.
