@@ -1,42 +1,102 @@
-"""
-Unit tests for PriceModule using DummyPriceSource.
-
-These tests validate end-to-end price access without any external APIs.
-"""
-
-import sys
-from pathlib import Path
-from datetime import datetime, timedelta
-
-# Ensure project root is on PYTHONPATH
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(PROJECT_ROOT))
+import pytest
+from datetime import datetime
+from typing import List, Dict, Optional
 
 from data.price.price_module import PriceModule
-from data.price.dummy_price_source import DummyPriceSource
+from data.price.price_source import PriceSource
 
 
-def test_get_current_price_from_dummy_source():
-    source = DummyPriceSource()
-    module = PriceModule(sources=[source])
+class WorkingPriceSource(PriceSource):
+    def name(self) -> str:
+        return "WorkingPriceSource"
 
-    price = module.get_current_price("SOL-USDC")
-    assert price == 150.0
+    def get_current_price(self, symbol: str) -> Optional[float]:
+        return 100.0
+
+    def get_historical_prices(
+        self,
+        symbol: str,
+        start_time: datetime,
+        end_time: datetime,
+        interval: str,
+    ) -> List[Dict]:
+        return []
+
+    def health_check(self) -> bool:
+        return True
 
 
-def test_get_historical_prices_from_dummy_source():
-    source = DummyPriceSource()
-    module = PriceModule(sources=[source])
+class FailingPriceSource(PriceSource):
+    def name(self) -> str:
+        return "FailingPriceSource"
 
-    start_time = datetime.now() - timedelta(hours=3)
-    end_time = datetime.now()
+    def get_current_price(self, symbol: str) -> Optional[float]:
+        raise RuntimeError("Source failure")
 
-    data = module.get_historical_prices(
-        "SOL-USDC",
-        start_time,
-        end_time,
-        interval="1h",
+    def get_historical_prices(
+        self,
+        symbol: str,
+        start_time: datetime,
+        end_time: datetime,
+        interval: str,
+    ) -> List[Dict]:
+        raise RuntimeError("Source failure")
+
+    def health_check(self) -> bool:
+        return False
+
+
+class NonePriceSource(PriceSource):
+    def name(self) -> str:
+        return "NonePriceSource"
+
+    def get_current_price(self, symbol: str) -> Optional[float]:
+        return None
+
+    def get_historical_prices(
+        self,
+        symbol: str,
+        start_time: datetime,
+        end_time: datetime,
+        interval: str,
+    ) -> List[Dict]:
+        return []
+
+    def health_check(self) -> bool:
+        return True
+
+
+def test_price_module_returns_price_from_first_working_source():
+    module = PriceModule(
+        sources=[
+            WorkingPriceSource(),
+            FailingPriceSource(),
+        ]
     )
 
-    assert isinstance(data, list)
-    assert len(data) > 0
+    price = module.get_current_price("SOL-USDC")
+    assert price == 100.0
+
+
+def test_price_module_falls_back_when_first_source_fails():
+    module = PriceModule(
+        sources=[
+            FailingPriceSource(),
+            WorkingPriceSource(),
+        ]
+    )
+
+    price = module.get_current_price("SOL-USDC")
+    assert price == 100.0
+
+
+def test_price_module_raises_error_when_all_sources_fail():
+    module = PriceModule(
+        sources=[
+            FailingPriceSource(),
+            NonePriceSource(),
+        ]
+    )
+
+    with pytest.raises(RuntimeError):
+        module.get_current_price("SOL-USDC")

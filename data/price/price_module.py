@@ -1,72 +1,40 @@
-"""
-Price Module
-============
-
-Coordinates access to price data using one or more price sources.
-
-Version: v1.0 (Dummy source wired)
-"""
-
-from typing import List, Dict, Optional
-from datetime import datetime
-
+from typing import List
 from data.price.price_source import PriceSource
 
 
 class PriceModule:
     """
-    PriceModule provides access to current and historical prices.
+    PriceModule is responsible for retrieving prices from multiple sources
+    using a fallback mechanism.
+
+    It does NOT know where prices come from.
+    It only knows how to try sources safely.
     """
 
-    def __init__(self, sources: Optional[List[PriceSource]] = None) -> None:
-        """
-        Initialize the Price Module.
+    def __init__(self, sources: List[PriceSource]):
+        if not sources:
+            raise ValueError("At least one PriceSource must be provided")
 
-        Args:
-            sources (List[PriceSource], optional): Ordered list of price sources
-        """
-        self.sources: List[PriceSource] = sources or []
+        self.sources = sources
 
-    def get_current_price(self, symbol: str) -> Optional[float]:
+    def get_current_price(self, symbol: str) -> float:
         """
-        Get the current price from the first healthy source
-        that returns a valid price.
+        Try each price source in order.
+        Return the first successful price.
+        Raise RuntimeError if all sources fail.
         """
+        last_error = None
+
         for source in self.sources:
-            if not source.health_check():
-                continue
-
-            price = source.get_current_price(symbol)
-            if price is not None:
+            try:
+                price = source.get_current_price(symbol)
+                if price is None:
+                    raise ValueError("PriceSource returned None")
                 return price
-
-        return None
-
-    def get_historical_prices(
-        self,
-        symbol: str,
-        start_time: datetime,
-        end_time: datetime,
-        interval: str,
-    ) -> List[Dict]:
-        """
-        Get historical prices from the first healthy source
-        that returns data.
-        """
-        for source in self.sources:
-            if not source.health_check():
+            except Exception as e:
+                last_error = e
                 continue
 
-            data = source.get_historical_prices(
-                symbol, start_time, end_time, interval
-            )
-            if data:
-                return data
-
-        return []
-
-    def health_check(self) -> bool:
-        """
-        Price module is healthy if at least one source is healthy.
-        """
-        return any(source.health_check() for source in self.sources)
+        raise RuntimeError(
+            f"All price sources failed for symbol {symbol}. Last error: {last_error}"
+        )
