@@ -168,3 +168,74 @@ Before moving to the next layer:
 If a higher layer is deleted, all lower layers must still work perfectly.
 
 This rule is non-negotiable.
+
+---
+
+## 4. PRICE MODULE – FOUNDATION LAYER
+
+### 4.1 Purpose
+
+The Price Module is the foundation of the entire system.
+
+It exists to provide **accurate, reliable, and consistent price data** to all other modules.
+
+All analysis, forecasting, and interpretation depend on this layer.
+
+---
+
+### 4.2 Responsibilities
+
+The Price Module is responsible for:
+- Fetching current market prices
+- Fetching historical price data
+- Supporting multiple price data sources
+- Automatically falling back if a data source fails
+- Caching price data to prevent API overuse
+- Providing a single, clean interface for price access
+
+---
+
+### 4.3 Source Management Rules
+
+- Multiple third-party price sources must be supported
+- Sources must be queried in a defined priority order
+- If one source fails, the next source must be used automatically
+- Source failures must be logged and exposed to higher layers as warnings
+
+---
+
+### 4.4 Access Control (Critical Rule)
+
+The Price Module is the **only module** allowed to:
+- Make external API calls for price data
+- Communicate with third-party price providers
+
+All other modules must:
+- Consume price data exclusively through the Price Module
+- Never call external price APIs directly
+
+Violation of this rule is a critical architectural failure.
+
+---
+
+### 4.5 Forbidden Actions
+
+The Price Module must never:
+- Compute indicators
+- Perform technical analysis
+- Interpret price movement
+- Make forecasts or recommendations
+- Contain strategy logic
+
+It provides **facts only**, never opinions.
+
+---
+
+### 4.6 Stability Requirement
+
+The Price Module must be:
+- Deterministic
+- Fully testable in isolation
+- Stable before any higher-layer development begins
+
+No higher module may be implemented until the Price Module is complete and frozen.
