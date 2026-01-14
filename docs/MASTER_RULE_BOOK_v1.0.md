@@ -222,8 +222,6 @@ The Technical Analysis module exists to measure observable price behavior.
 
 It translates raw price data into objective, explainable measurements.
 
-The TA module does not make decisions and does not issue recommendations.
-
 ---
 
 ### 5.2 Allowed Indicators (v1.0 – Frozen)
@@ -257,8 +255,6 @@ The TA module provides measurements only, never conclusions.
 
 The Fundamental Analysis module provides contextual, non-price-based information that may influence market behavior.
 
-It captures macro, geopolitical, and ecosystem-specific pressures that are not visible in price alone.
-
 ---
 
 ### 6.2 FA Data Scope (v1.0 – Frozen)
@@ -271,8 +267,6 @@ The FA module may consider only the following categories:
 - Solana ecosystem–specific news and announcements
 - Major protocol upgrades, outages, or regulatory actions
 
-No additional FA sources may be added without a new Rule Book version.
-
 ---
 
 ### 6.3 Evidence-Based News Handling Rules
@@ -281,8 +275,6 @@ No additional FA sources may be added without a new Rule Book version.
 - News must be categorized by type and relevance
 - News impact must be assessed using historical precedents
 - News impact must decay over time
-
-FA conclusions must never be based on headline interpretation alone.
 
 ---
 
@@ -293,16 +285,76 @@ The FA module may output:
 - Event risk level
 - Macro or ecosystem pressure indicators
 
-FA outputs provide context only and must not override TA measurements.
+FA outputs provide context only.
 
 ---
 
-### 6.5 Forbidden Actions
+## 7. MARKET STATE CLASSIFICATION MODULE
 
-The FA module must never:
-- Predict price direction
-- Generate trade or liquidity signals
-- Override TA or market state classification
-- Make absolute or time-specific claims
+### 7.1 Purpose
 
-It provides contextual evidence only, never forecasts.
+The Market State Classification module exists to answer one question:
+
+**What type of market environment exists right now?**
+
+It converts TA and FA measurements into structured, human-readable market states.
+
+---
+
+### 7.2 Market State Definition Rules
+
+Market states must be:
+- Mutually exclusive
+- Evidence-based
+- Explainable in plain language
+- Stable enough to be backtested historically
+
+Market states must never be vague or overlapping.
+
+---
+
+### 7.3 Core Market State Dimensions
+
+Each market state is defined using four dimensions:
+
+1. **Direction**
+   - Bullish
+   - Bearish
+   - Neutral
+
+2. **Volatility Regime**
+   - Low
+   - Normal
+   - High
+   - Expanding / Contracting
+
+3. **Structure**
+   - Trending
+   - Range-bound
+   - Choppy / Transitional
+
+4. **Contextual Risk**
+   - Low
+   - Elevated
+   - High (event-driven)
+
+---
+
+### 7.4 Market State Outputs
+
+The Market State module may output:
+- A primary market state label
+- A secondary risk modifier
+- A confidence score based on indicator agreement
+
+---
+
+### 7.5 Forbidden Actions
+
+The Market State Classification module must never:
+- Suggest strategies
+- Compute liquidity ranges
+- Allocate capital
+- Make forecasts or predictions
+
+It classifies the present environment only.
