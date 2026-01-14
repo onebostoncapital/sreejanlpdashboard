@@ -177,9 +177,7 @@ This rule is non-negotiable.
 
 The Price Module is the foundation of the entire system.
 
-It exists to provide **accurate, reliable, and consistent price data** to all other modules.
-
-All analysis, forecasting, and interpretation depend on this layer.
+It exists to provide accurate, reliable, and consistent price data to all other modules.
 
 ---
 
@@ -195,30 +193,17 @@ The Price Module is responsible for:
 
 ---
 
-### 4.3 Source Management Rules
+### 4.3 Access Control (Critical Rule)
 
-- Multiple third-party price sources must be supported
-- Sources must be queried in a defined priority order
-- If one source fails, the next source must be used automatically
-- Source failures must be logged and exposed to higher layers as warnings
-
----
-
-### 4.4 Access Control (Critical Rule)
-
-The Price Module is the **only module** allowed to:
+The Price Module is the only module allowed to:
 - Make external API calls for price data
 - Communicate with third-party price providers
 
-All other modules must:
-- Consume price data exclusively through the Price Module
-- Never call external price APIs directly
-
-Violation of this rule is a critical architectural failure.
+All other modules must consume price data exclusively through the Price Module.
 
 ---
 
-### 4.5 Forbidden Actions
+### 4.4 Forbidden Actions
 
 The Price Module must never:
 - Compute indicators
@@ -227,15 +212,69 @@ The Price Module must never:
 - Make forecasts or recommendations
 - Contain strategy logic
 
-It provides **facts only**, never opinions.
+---
+
+## 5. TECHNICAL ANALYSIS (TA) MODULE
+
+### 5.1 Purpose
+
+The Technical Analysis module exists to measure observable price behavior.
+
+It translates raw price data into objective, explainable measurements.
+
+The TA module does not make decisions and does not issue recommendations.
 
 ---
 
-### 4.6 Stability Requirement
+### 5.2 Allowed Indicators (v1.0 – Frozen)
 
-The Price Module must be:
-- Deterministic
-- Fully testable in isolation
-- Stable before any higher-layer development begins
+Only the following indicators are permitted in version 1.0:
 
-No higher module may be implemented until the Price Module is complete and frozen.
+- Moving Average (MA) 20
+- Moving Average (MA) 200
+- Relative Strength Index (RSI)
+- Volatility measure (ATR or Standard Deviation)
+- Range / Chop efficiency metric
+
+No additional indicators may be added without a new Rule Book version.
+
+---
+
+### 5.3 Indicator Interpretation Rules
+
+Indicators must be used only to describe behavior:
+
+- MA-20 and MA-200 describe short-term and long-term price alignment
+- RSI describes momentum strength or weakness
+- Volatility measures describe speed and risk of price movement
+- Range efficiency describes directional progress versus oscillation
+
+Indicators must never be used to:
+- Generate buy or sell signals
+- Predict reversals
+- Justify assumptions
+
+---
+
+### 5.4 TA Outputs
+
+The TA module may output:
+- Short-term bias (measured)
+- Long-term bias (measured)
+- Volatility level
+- Trend strength
+- Indicator agreement or conflict score
+
+All outputs must be numerical or descriptive, not prescriptive.
+
+---
+
+### 5.5 Forbidden Actions
+
+The TA module must never:
+- Call external APIs
+- Access news or fundamental data
+- Forecast future prices
+- Recommend strategies or liquidity ranges
+
+It provides measurements only, never conclusions.
